@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <link rel="stylesheet" href="style.css">
+        <title>Hangman</title>
+    </head>
+
+    <body>
+        <div id="header">
+            HANGMAN
+        </div>
+        <div id="wrapper">
+            <div id="start">
+                <h1 id="starttext">
+                    START
+                </h1>
+                <p>
+                    Press spacebar
+                </p>
+            </div>
+            <div id="gameover">
+                <h1 id="gameovertext">
+                    GAME OVER
+                </h1>
+                <p>
+                    wanna retry?
+                </p>
+            </div>
+            <div id="win">
+                <h1 id="wintext">
+                    YOU WIN
+                </h1>
+                <p>
+                    wanna do it again?
+                </p>
+            </div>
+            <div id="gallows">
+                <canvas id="gcanvas" width="300" height="300">
+                </canvas>
+            </div>
+            <div id="hiddenWord">
+                _______
+            </div>
+            <div id="incorrect">
+            </div>
+            <div id="mute">
+                with sound
+            </div>
+            <div id="messages">
+            </div>
+        </div>
+
+
+        <script src="script.js"></script>
+    </body>
+</html>

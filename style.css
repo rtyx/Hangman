@@ -1,0 +1,96 @@
+body {
+    margin: 0;
+    background-color: black;
+    font-family: monospace;
+}
+
+#header {
+    color: white;
+    font-size: 30px;
+    text-align: center;
+    margin: 25px;
+}
+
+#start {
+    color: black;
+    background-color: white;
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    text-align: center;
+    display: inline-block;
+}
+
+#starttext {
+    top: 50%;
+
+}
+
+#wrapper {
+    text-align: center;
+    margin: 25px;
+}
+
+#gallows {
+    height: 300px;
+    width: 300px;
+    display: inline-block;
+}
+
+#gcanvas {
+    margin-bottom: 25px;
+}
+
+#hiddenWord {
+    font-size: 30px;
+    letter-spacing: 5px;
+    color: white;
+}
+
+#incorrect {
+    color: red;
+    margin: 25px;
+    letter-spacing: 5px;
+}
+
+#gameover {
+    color: black;
+    background-color: red;
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    display: none;
+    text-align: center;
+}
+
+#gameovertext {
+    top: 50%;
+}
+
+#win {
+    color: black;
+    background-color: green;
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    display: none;
+    text-align: center;
+}
+
+#wintext {
+    top: 50%;
+}
+
+#mute {
+    display: inline-block;
+    color: grey;
+}
+
+#messages {
+    display: inline-block;
+    color: grey;
+}
+
+.hidden {
+    display: none;
+}
