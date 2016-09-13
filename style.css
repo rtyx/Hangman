@@ -87,8 +87,58 @@ body {
 }
 
 #messages {
-    display: inline-block;
+    display: block;
     color: grey;
+}
+
+#risk {
+    margin: 25px;
+    display: none;
+}
+
+.myButton {
+	background:linear-gradient(to bottom, #cf0000 5%, #940000 100%);
+	background-color:#cf0000;
+	border-radius:12px;
+	display:inline-block;
+	cursor:pointer;
+	color:black;
+	font-size:12px;
+	font-weight:bold;
+	padding:5px 8px;
+	text-decoration:none;
+    margin: 10px;
+}
+.myButton:hover {
+	background:linear-gradient(to bottom, #940000 5%, #cf0000 100%);
+	background-color:#940000;
+}
+.myButton:active {
+	position:relative;
+	top:1px;
+}
+
+#feelingRiskyWindow {
+    display: none;
+}
+
+#submit {
+    display: none;
+}
+
+#blackfade {
+    background-color: black;
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    display: inline-block;;
+    opacity: 0;
+    transition-property: opacity;
+    transition-duration: 2s;
+}
+
+#yourGuess {
+    border-radius:12px;
 }
 
 .hidden {

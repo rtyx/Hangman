@@ -7,6 +7,18 @@ var win = document.getElementById('win');//as well as the win screen
 var cxt = document.getElementById('gcanvas').getContext('2d');//this is the canvas that contains the hangman
 var mutebotton = document.getElementById('mute');
 var messages = document.getElementById('messages');
+var risk = document.getElementById('risk');
+var riskButton = document.getElementById('riskButton');
+var submit = document.getElementById('submit');
+var fadeToBlack = document.getElementById('blackfade');
+var yourGuess = document.getElementById('yourGuess');
+
+
+
+
+var riskWindow = document.getElementById('feelingRiskyWindow');
+
+
 
 
 var mute = false;
@@ -14,6 +26,7 @@ var backgroundMusic = new Audio('orpheus.mp3');
 var hanged = new Audio('hanged.mp3');
 var hit = new Audio('thump.mp3');
 var finalhit = new Audio('finalhit.wav');
+var winbell = new Audio('winbell.wav');
 
 var drawHead = function() {
     cxt.strokeStyle = 'white';
@@ -93,6 +106,7 @@ function startGame() { //this is the function that starts the game
     startBotton.style.display = "none";
     gameOver.style.display = "none";
     win.style.display = "none";
+    risk.style.display = "inline-block";
 
     incorrectChars.innerHTML = ""; //clear the incorrect characters box (from previous games)
     hiddenWord.style.color = "white"; //and turn the color to white (in case it was red from a previous game)
@@ -108,33 +122,36 @@ function startGame() { //this is the function that starts the game
     var wordSoFar = randomWord.replace(/[A-Z]/g, "_"); //replaces each character with a "_"
     hiddenWord.innerHTML = wordSoFar; //This inserts the random word (hidden) in the field.
 
-    cxt.strokeStyle = 'white'; //This is the canvas functions. We draw the Gallow
-    cxt.lineWidth = 10;
-    cxt.lineCap = "square";
-    cxt.lineJoin = "miter";
-    cxt.beginPath();
-    cxt.moveTo(40,280);
-    cxt.lineTo(100,280);
-    cxt.moveTo(70,280);
-    cxt.lineTo(70,40);
-    cxt.lineTo(200,40);
-    cxt.moveTo(75,90);
-    cxt.lineTo(115,45);
-    cxt.stroke();
+    function drawGallows() {
+        cxt.strokeStyle = 'white'; //This is the canvas functions. We draw the Gallow
+        cxt.lineWidth = 10;
+        cxt.lineCap = "square";
+        cxt.lineJoin = "miter";
+        cxt.beginPath();
+        cxt.moveTo(40,280);
+        cxt.lineTo(100,280);
+        cxt.moveTo(70,280);
+        cxt.lineTo(70,40);
+        cxt.lineTo(200,40);
+        cxt.moveTo(75,90);
+        cxt.lineTo(115,45);
+        cxt.stroke();
 
-    cxt.strokeStyle = 'white'; //including the string
-    cxt.lineWidth = 1;
-    cxt.lineCap = "square";
-    cxt.lineJoin = "miter";
-    cxt.beginPath();
-    cxt.moveTo(200,40);
-    cxt.lineTo(200,100);
-    cxt.stroke();
+        cxt.strokeStyle = 'white'; //including the string
+        cxt.lineWidth = 1;
+        cxt.lineCap = "square";
+        cxt.lineJoin = "miter";
+        cxt.beginPath();
+        cxt.moveTo(200,40);
+        cxt.lineTo(200,100);
+        cxt.stroke();
+    }
+
+    drawGallows();
 
     console.log(randomWord); //this is supposed to be secret, but we console.log the answer
 
-    document.addEventListener("keypress", function(event) { //we listen for the keys pressed
-
+    function normalPlay(event) { //we listen for the keys pressed
         var key_press = String.fromCharCode(event.keyCode); //and turn them into strings
         var newGuess = key_press.toUpperCase(); //and make them uppercase
         if (isNaN(newGuess)) {
@@ -158,8 +175,17 @@ function startGame() { //this is the function that starts the game
                     }, 3000);    //after 1 second
                 }
                 if (wordSoFar === randomWord) {
-                    win.style.display = "inline-block";
-                    incorrectChars.innerHTML = ""; //we will just show them on the screen
+                    fadeToBlack.style.opacity = 1;
+                    if (!mute) { //if the sound is active,
+                        winbell.play(); //and play the win bell
+                        backgroundMusic.pause(); //we stop the music
+                    }
+                    setTimeout(function() {
+                        win.style.display = "inline-block";
+                        fadeToBlack.style.display = "none";
+                        risk.style.display = "none";
+                        incorrectChars.innerHTML = ""; //we will just show them on the screen
+                    }, 2000);
                 }
             } else { //if the random word doesn't contain the letter we guessed, we have two scenarios
                 if (wrongChars.includes(newGuess)) { //we had tried that letter before, in that case
@@ -198,17 +224,22 @@ function startGame() { //this is the function that starts the game
                         if (!mute) { //play the final hit if the mute is not activated
                             finalhit.play();
                         }
-                        setTimeout(function() { //and prepare the game over screen
+                        fadeToBlack.style.opacity = 1;
+                        setTimeout(function() {//and prepare the game over screen
                             if (!mute) { //if the sound is active, we play the hanged sound
                                 backgroundMusic.pause(); //and stop the music
                                 hanged.play();
                             }
+                            gameOver.style.display = "inline-block";//show the game over div
+                            fadeToBlack.style.display = "none";
+                            risk.style.display = "none";
+                            incorrectChars.innerHTML = "You fucked it up"; //and add more drama
                             cxt.clearRect(0, 0, 300, 300); //we clear the canvas
                             hiddenWord.innerHTML = randomWord; //show the correct answer
                             hiddenWord.style.color = "red"; //add some drama
-                            gameOver.style.display = "inline-block"; //show the game over div
-                            incorrectChars.innerHTML = "You fucked it up"; //and add more drama
-                        }, 1000); //but all of that, waiting a lil bit
+                            risk.style.display = "none";
+                        }, 2000);//but all of that, waiting a lil bit
+
                         incorrectChars.innerHTML = "";
                         break;
                     default:
@@ -223,12 +254,64 @@ function startGame() { //this is the function that starts the game
                 messages.innerHTML = "";
             }, 3000);
         }
+    }
+
+    document.addEventListener("keypress", normalPlay);
+
+    risk.addEventListener("click", function feelingRisky() {
+        riskButton.style.display = "none";
+        riskWindow.style.display = "block";
+        submit.style.display = "block";
+        document.removeEventListener("keypress", normalPlay);
+        yourGuess.focus();
+        function resolveRisk() {
+            var firstGuess = document.getElementById("yourGuess").value;
+            var yourGuess = firstGuess.toUpperCase();
+            if (yourGuess == randomWord) {
+                if (!mute) { //if the sound is active,
+                    backgroundMusic.pause(); //we stop the music
+                    winbell.play(); //and play the win bell
+                }
+                fadeToBlack.style.opacity = 1;
+                setTimeout(function() {
+                    win.style.display = "inline-block";
+                    fadeToBlack.style.display = "none";
+                    risk.style.display = "none";
+                    incorrectChars.innerHTML = ""; //we will just show them on the screen
+                }, 2000);
+            } else {
+                if (!mute) { //play the final hit if the mute is not activated
+                    finalhit.play();
+                }
+                fadeToBlack.style.opacity = 1;
+                setTimeout(function() {//and prepare the game over screen
+                    if (!mute) { //if the sound is active, we play the hanged sound
+                        backgroundMusic.pause(); //and stop the music
+                        hanged.play();
+                    }
+                    gameOver.style.display = "inline-block";//show the game over div
+                    fadeToBlack.style.display = "none";
+                    risk.style.display = "none";
+                    incorrectChars.innerHTML = "You fucked it up"; //and add more drama
+                    cxt.clearRect(0, 0, 300, 300); //we clear the canvas
+                    hiddenWord.innerHTML = randomWord; //show the correct answer
+                    hiddenWord.style.color = "red"; //add some drama
+                    risk.style.display = "none";
+                }, 2000);//but all of that, waiting a lil bit
+                incorrectChars.innerHTML = "";
+            }
+        }
+        submit.addEventListener("click", resolveRisk);
+        window.addEventListener('keypress', function(event) {
+            var keypressed = event.keyCode;
+            if (keypressed === 13) {
+                resolveRisk();
+            }
+        });
     });
 }
 
-startBotton.addEventListener('click', startGame); //the game can start if we click the start botton
-gameOver.addEventListener('click', startGame); //or the game over botton
-win.addEventListener('click', startGame); //or the win botton
+
 
 mutebotton.addEventListener('click', function() { //this controls the mute variable
     if (!mute) { //if the mute variable is false, but we don't want sound
@@ -240,9 +323,18 @@ mutebotton.addEventListener('click', function() { //this controls the mute varia
     }
 });
 
-window.addEventListener('keypress', function(event) { //This event listens to the keys pressed
+gameOver.addEventListener('click', function() {
+    window.location.reload(false);
+}); //or the game over botton
+win.addEventListener('click', function() {
+    window.location.reload(false);
+}); //or the win botton
+startBotton.addEventListener('click', startGame); //the game can start if we click the start botton
+
+window.addEventListener('keypress', function handler(event) { //This event listens to the keys pressed
     var keypressed = event.keyCode; //and checks the code of the key
     if (keypressed === 32) { //if the key is the space bar
         startGame(); //we start the game
     }
+    window.removeEventListener("keypress", handler);
 });
